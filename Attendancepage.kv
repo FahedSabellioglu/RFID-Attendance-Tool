@@ -1,0 +1,78 @@
+<AttendancePage>:
+    FloatLayout:
+        id: layout_page
+        canvas:
+            Rectangle:
+                source: "data/img/Background-blur.png"
+                size: self.size
+                pos: self.pos
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: [0.0,0.0,0.0,0.4]
+                RoundedRectangle:
+                    pos: root.center_x-350, root.center_y-200
+                    size: 450,300
+                    radius: 10,10,10,10
+            Label:
+                id: Student_ID
+                text: "Student ID"
+                color: 1,1,1,1
+                font_name: "data/font/CaviarDreams.ttf"
+                font_size: self.height / 3
+                size_hint: .1, .1
+                pos_hint: {"center_x": .15, "center_y": .375}
+            TextInput:
+                id: StudentID_Text
+                write_tab: False
+                multiline: False
+                font_name: "data/font/CaviarDreams_Bold.ttf"
+                font_size: self.height / 3
+                background_normal: "data/img/textinput.png"
+                background_active: "data/img/textinput_disabled.png"
+                background_disabled_normal: "data/img/textinput_disabled.png"
+                padding_y: [self.height / 3, 0]
+                size_hint: .33, .1
+                disabled:True
+                pos_hint: {"center_x": .43, "center_y": .38}
+            Label:
+                id: Name_Surname
+                text: "Name Surname"
+                color: 1,1,1,1
+                multiline: False
+                font_name: "data/font/CaviarDreams.ttf"
+                font_size: self.height / 3
+                size_hint: .1, .1
+                pos_hint: {"center_x": .175, "center_y": .250}
+            TextInput:
+                id: Student_Name_Surname
+                write_tab: False
+                multiline: False
+                font_name: "data/font/CaviarDreams_Bold.ttf"
+                font_size: self.height / 3
+                background_normal: "data/img/textinput.png"
+                background_active: "data/img/textinput_disabled.png"
+                background_disabled_normal: "data/img/textinput_disabled.png"
+                padding_y: [self.height / 3, 0]
+                size_hint: .33, .1
+                disabled:True
+                pos_hint: {"center_x": .43, "center_y": .25}
+
+            Button:
+                id: btn_login
+                text: "LOGIN"
+                font_name: "data/font/LibelSuit.ttf"
+                font_size: self.height / 3
+                background_normal: "data/img/but_red_down.png"
+                background_down: "data/img/but_red_down.png"
+                background_disabled_normal: "data/img/but_red_down.png"
+                size_hint: .2, .1
+                pos_hint: {"center_x": .525, "center_y": .10}
+                on_release:root.OnLogin()
+        Image:
+            id: app_ico
+            source: "data/img/Login_Logo.png"
+            allow_stretch: False
+            keep_ratio:True
+            size_hint_y: .18
+            pos_hint: {"center_x": .17, "center_y": .550}
