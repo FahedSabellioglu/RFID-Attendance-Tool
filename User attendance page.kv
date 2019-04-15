@@ -1,0 +1,30 @@
+
+<UserAttendance>:
+	orientation:'vertical'
+    canvas:
+        Rectangle:
+            source: "data/img/Background-blur.png"
+            size: self.size
+            pos: self.pos
+
+	BoxLayout:
+	    size_hint:.65,.60
+        pos_hint:{"center_x":.65,"center_y":.6}
+
+		Months:
+        GridLayout:
+            id:BOX
+            cols:7
+		    size_hint:.65,1
+		    pos_hint:{"center_x":.5,"center_y":.45}
+		    padding:[0,0,10,0]
+			orientation: 'horizontal'
+    Button:
+        text:"Exit"
+        on_press:root.Exit()
+        size_hint:.15,.09
+        pos_hint: {"center_x":.89,"center_y":.2}
+        background_normal: "data/img/but_red_down.png"
+        background_active: "data/img/but_red_down.png"
+        background_down:  "data/img/but_red_down.png"
+        background_disabled_normal:  "data/img/but_red_down.png"
