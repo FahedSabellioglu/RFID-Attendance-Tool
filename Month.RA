@@ -21,7 +21,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_feb
+            id:btn_jan
             text:"Feb"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -36,7 +36,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_mar
+            id:btn_jan
             text:"Mar"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -51,7 +51,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_apr
+            id:btn_jan
             text:"Apr"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -66,7 +66,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_may
+            id:btn_jan
             text:"May"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -81,7 +81,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_jun
+            id:btn_jan
             text:"Jun"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -96,7 +96,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_jul
+            id:btn_jan
             text:"Jul"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -111,7 +111,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_aug
+            id:btn_jan
             text:"Aug"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -126,7 +126,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_sep
+            id:btn_jan
             text:"Sep"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -141,7 +141,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_oct
+            id:btn_jan
             text:"Oct"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -156,7 +156,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_nov
+            id:btn_jan
             text:"Nov"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
@@ -171,7 +171,7 @@
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
-            id:btn_dec
+            id:btn_jan
             text:"Dec"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 1.5
