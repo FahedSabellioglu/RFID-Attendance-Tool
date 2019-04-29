@@ -48,34 +48,34 @@ def AddStudent(self): #add student drop button
 
     self.StudentID = TextInput(hint_text="Student ID", id="user_id", multiline=False,font_name="data/font/CaviarDreams_Bold.ttf"
                                , font_size=self.parent.parent.parent.height / 25, background_normal="data/img/widget_gray_75.png",
-                               background_active="data/img/widget_purple_75_select.png",background_disabled_normal="data/img/widget_black_75.png",
+                               background_active="data/img/widget_red_select.png",
                                padding_y=[self.parent.parent.parent.height / 150, 0], size_hint_x=.30, size_hint_y=.1,
                                pos_hint={"center_x": .18, "center_y": .855}, write_tab=False)
 
 
     self.Dept = TextInput(hint_text="Dept", id="user_password", write_tab=False, multiline=False,
                           font_name="data/font/CaviarDreams_Bold.ttf", font_size=self.parent.parent.parent.height / 25,
-                          background_normal="data/img/widget_gray_75.png",background_active="data/img/widget_purple_75_select.png",
-                          background_disabled_normal="data/img/widget_black_75.png", padding_y=[self.height / 100, 0],
+                          background_normal="data/img/widget_gray_75.png",background_active="data/img/widget_red_select.png",
+                           padding_y=[self.height / 100, 0],
                           size_hint_x=.30, size_hint_y=.1, pos_hint={"center_x": .18, "center_y": .400})
 
 
     self.Name = TextInput(hint_text="Name", id="user_password", multiline=False, font_name="data/font/CaviarDreams_Bold.ttf"
                           , font_size=self.parent.parent.parent.height / 25, background_normal="data/img/widget_gray_75.png",
-                          background_active="data/img/widget_purple_75_select.png", background_disabled_normal="data/img/widget_black_75.png",
+                          background_active="data/img/widget_red_select.png",
                           padding_y=[self.parent.parent.parent.height / 100, 0],size_hint_x=.30, size_hint_y=.1,
                           pos_hint={"center_x": .18, "center_y": .700}, write_tab=False)
 
     self.Surname = TextInput(hint_text="Surname", id="user_password", write_tab=False, multiline=False, font_name="data/font/CaviarDreams_Bold.ttf"
                              , font_size=self.parent.parent.parent.height / 25, background_normal="data/img/widget_gray_75.png",
-                             background_active="data/img/widget_purple_75_select.png", background_disabled_normal="data/img/widget_black_75.png",
+                             background_active="data/img/widget_red_select.png",
                              padding_y=[self.parent.parent.parent.height / 100, 0], size_hint_x=.30, size_hint_y=.1,
                              pos_hint={"center_x": .18, "center_y": .550})
 
 
     self.BankCardID = TextInput(hint_text="Bank Card ID", id="user_password", disable=True,font_name="data/font/CaviarDreams_Bold.ttf"
                                 , font_size=self.parent.parent.parent.height / 25, background_normal="data/img/widget_gray_75.png",
-                                background_active="data/img/widget_purple_75_select.png",background_disabled_normal="data/img/widget_black_75.png",
+                                background_active="data/img/widget_red_select.png",
                                 padding_y=[self.parent.parent.parent.height / 100, 0], size_hint_x=.5, size_hint_y=.1,
                                 pos_hint={"center_x": .280, "center_y": .250}, write_tab=False)
 
@@ -219,14 +219,14 @@ def on_delete(self): #delete student drop button
 
     popup_content.add_widget(Button(text="Delete",font_name="data/font/LibelSuit.ttf",font_size=self.height / 2.3,
                                     background_normal= "data/img/widget_red.png",background_down=  "data/img/widget_red.png",
-                                    background_disabled_normal= "data/img/widget_red.png",size_hint_x=.25,size_hint_y=None,
+                                    size_hint_x=.25,size_hint_y=None,
                                     height=self.height / 1.8,pos_hint={"center_x": .35, "center_y": .47 - (
                                                 len(self.Students.adapter.data) * self.height / 1.5) / 1000},
                                     on_release = Delete))
 
     popup_content.add_widget(Button(text="Close",font_name="data/font/LibelSuit.ttf",id='CloseButton',font_size=self.height / 2.3,
                                     background_normal="data/img/widget_red.png",background_down="data/img/widget_red.png",
-                                    background_disabled_normal = "data/img/widget_red.png",size_hint_x=.25,size_hint_y=None,
+                                    size_hint_x=.25,size_hint_y=None,
                                     height=self.height / 1.8,pos_hint={"center_x": .65, "center_y": .47-(len(self.Students.adapter.data) * self.height/1.5)/1000},
                                     on_release=self.popup.dismiss))
 
@@ -294,29 +294,29 @@ def add_ins(self):
 
     self.Ins_Name = TextInput(hint_text="Name", id="user_name", multiline=False,font_name="data/font/CaviarDreams_Bold.ttf"
                                , font_size=self.parent.parent.parent.height / 25, background_normal="data/img/widget_gray_75.png",
-                               background_active="data/img/widget_purple_75_select.png", background_disabled_normal="data/img/widget_black_75.png",
+                               background_active="data/img/widget_red_select.png",
                                padding_y=[self.parent.parent.parent.height / 150, 0], size_hint_x=.30, size_hint_y=.1,
                                pos_hint={"center_x": .18, "center_y": .855}, write_tab=False)
 
 
     self.Ins_dept = TextInput(hint_text="Dept", id="user_surname", write_tab=False, multiline=False,
                           font_name="data/font/CaviarDreams_Bold.ttf", font_size=self.parent.parent.parent.height / 25,
-                          background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_purple_75_select.png",
-                          background_disabled_normal="data/img/widget_black_75.png", padding_y=[self.height / 100, 0],
+                          background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_red_select.png",
+                           padding_y=[self.height / 100, 0],
                           size_hint_x=.30, size_hint_y=.1, pos_hint={"center_x": .18, "center_y": .400})
 
 
     self.surname = TextInput(hint_text="Surname", id="user_password", multiline=False, font_name="data/font/CaviarDreams_Bold.ttf"
                           , font_size=self.parent.parent.parent.height / 25, background_normal="data/img/widget_gray_75.png",
-                          background_active="data/img/widget_purple_75_select.png", background_disabled_normal="data/img/widget_black_75.png",
+                          background_active="data/img/widget_red_select.png",
                           padding_y=[self.parent.parent.parent.height / 100, 0],size_hint_x=.30, size_hint_y=.1,
                           pos_hint={"center_x": .18, "center_y": .700}, write_tab=False)
 
 
     self.password = TextInput(hint_text="Password", id="user_password", write_tab=False, multiline=False,
                              font_name="data/font/CaviarDreams_Bold.ttf" , font_size=self.parent.parent.parent.height / 25,
-                             background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_purple_75_select.png",
-                             background_disabled_normal="data/img/widget_black_75.png", padding_y=[self.parent.parent.parent.height / 100, 0],
+                             background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_red_select.png",
+                              padding_y=[self.parent.parent.parent.height / 100, 0],
                              size_hint_x=.30, size_hint_y=.1, pos_hint={"center_x": .18, "center_y": .550})
 
 
@@ -474,13 +474,13 @@ def delete_ins(self):
 
     popup_content.add_widget(Button(text="Delete", font_name="data/font/LibelSuit.ttf", font_size=self.height / 2.3,
                                     background_normal="data/img/widget_red.png", background_down="data/img/widget_red.png",
-                                    background_disabled_normal="data/img/widget_red.png", size_hint_x=.25,
+                                     size_hint_x=.25,
                                     size_hint_y=None, height=self.height / 1.8, on_release=Delete,
                                     pos_hint={"center_x": .35, "center_y": .47 - ( len(self.All_Ins.adapter.data) * self.height / 1.5) / 1000}))
 
     popup_content.add_widget(Button(text="Close", font_name="data/font/LibelSuit.ttf", id='CloseButton', font_size=self.height / 2.3,
                                      background_normal="data/img/widget_red.png", background_down="data/img/widget_red.png",
-                                     background_disabled_normal="data/img/widget_red.png", size_hint_x=.25, size_hint_y=None,
+                                      size_hint_x=.25, size_hint_y=None,
                                      height=self.height / 1.8, pos_hint={"center_x": .65, "center_y": .47 - (
                                                     len(self.All_Ins.adapter.data) * self.height / 1.5) / 1000},
                                      on_release=self.popup.dismiss))
@@ -529,22 +529,22 @@ def add_course(self):
 
     self.CourseCode = TextInput(hint_text="Course Code", id="CourseCode", multiline=False,
                                font_name="data/font/CaviarDreams_Bold.ttf", font_size=self.parent.parent.parent.height / 25,
-                               background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_purple_75_select.png",
-                               background_disabled_normal="data/img/widget_black_75.png", padding_y=[self.parent.parent.parent.height / 150, 0],
+                               background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_red_select.png",
+                                padding_y=[self.parent.parent.parent.height / 150, 0],
                                size_hint_x=.30, size_hint_y=.1,pos_hint={"center_x": .18, "center_y": .855}, write_tab=False)
 
     self.Credits = TextInput(hint_text="Credits", id="CourseCredits", write_tab=False, multiline=False,
                           font_name="data/font/CaviarDreams_Bold.ttf", font_size=self.parent.parent.parent.height / 25,
-                          background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_purple_75_select.png",
-                          background_disabled_normal="data/img/widget_black_75.png", padding_y=[self.height / 100, 0],
+                          background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_red_select.png",
+                          padding_y=[self.height / 100, 0],
                           size_hint_x=.30, size_hint_y=.1, pos_hint={"center_x": .18, "center_y": .550})
 
     self.CourseTitle = TextInput(hint_text="Course Title", id="user_password", multiline=False,
                           font_name="data/font/CaviarDreams_Bold.ttf"
                           , font_size=self.parent.parent.parent.height / 25,
                           background_normal="data/img/widget_gray_75.png",
-                          background_active="data/img/widget_purple_75_select.png",
-                          background_disabled_normal="data/img/widget_black_75.png",
+                          background_active="data/img/widget_red_select.png",
+
                           padding_y=[self.parent.parent.parent.height / 100, 0], size_hint_x=.30, size_hint_y=.1,
                           pos_hint={"center_x": .18, "center_y": .700}, write_tab=False)
 
@@ -659,7 +659,7 @@ def delete_course(self):
     popup_content.add_widget(Button(text="Delete", font_name="data/font/LibelSuit.ttf", font_size=self.height / 2.3,
                                     background_normal="data/img/widget_red.png",
                                     background_down="data/img/widget_red.png",
-                                    background_disabled_normal="data/img/widget_red.png", size_hint_x=.25,
+                                     size_hint_x=.25,
                                     size_hint_y=None,
                                     height=self.height / 1.8, pos_hint={"center_x": .35, "center_y": .47 - (
                 len(self.Courses.adapter.data) * self.height / 1.5) / 1000},
@@ -668,7 +668,7 @@ def delete_course(self):
     popup_content.add_widget(
         Button(text="Close", font_name="data/font/LibelSuit.ttf", id='CloseButton', font_size=self.height / 2.3,
                background_normal="data/img/widget_red.png", background_down="data/img/widget_red.png",
-               background_disabled_normal="data/img/widget_red.png", size_hint_x=.25, size_hint_y=None,
+                size_hint_x=.25, size_hint_y=None,
                height=self.height / 1.8, pos_hint={"center_x": .65, "center_y": .47 - (
                         len(self.Courses.adapter.data) * self.height / 1.5) / 1000},
                on_release=self.popup.dismiss))
