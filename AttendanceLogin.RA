@@ -1,0 +1,112 @@
+<AttendanceLogin>:
+    FloatLayout:
+        id: layout_page
+        canvas:
+            Rectangle:
+                source: "data/img/Background-blur.png"
+                size: self.size
+                pos: self.pos
+
+        FloatLayout:
+            id: layout_menubar
+            pos_hint: {"x": 0, "y": .925}
+            canvas.before:
+                Color:
+                    rgba: [0.0,0.0,0.0,0.76]
+                RoundedRectangle:
+                    pos: root.center_x-220, root.center_y-150
+                    size: 450,300
+                    radius: 10,10,10,10
+
+        Label:
+            id: txt_userid
+            text: "Username"
+            color: 1,1,1,0.9
+            multiline: False
+            font_name: "data/font/CaviarDreams.ttf"
+            font_size: self.height / 3
+            size_hint: .1, .1
+            pos_hint: {"center_x": .35, "center_y": .56}
+        Label:
+            id: txt_password
+            text: "Password"
+            color: 1,1,1,0.9
+            multiline: False
+            font_name: "data/font/CaviarDreams.ttf"
+            font_size: self.height / 3
+            size_hint: .1, .1
+            opacity: 0
+            pos_hint: {"center_x": .35, "center_y": .530}
+
+        TextInput:
+            id: input_userid
+            write_tab: False
+            multiline: False
+            font_name: "data/font/CaviarDreams_Bold.ttf"
+            font_size: self.height / 3
+            background_normal: "data/img/textinput.png"
+            background_active: "data/img/textinput_disabled.png"
+            background_disabled_normal: "data/img/textinput_disabled.png"
+            padding_y: [self.height / 3, 0]
+            size_hint: .3, .1
+            pos_hint: {"center_x": .58, "center_y": .56}
+        TextInput:
+            id: input_password
+            opacity:0
+            write_tab: False
+            multiline: False
+            disabled:True
+            font_name: "data/font/CaviarDreams_Bold.ttf"
+            font_size: self.height / 3
+            background_normal: "data/img/textinput.png"
+            background_active: "data/img/textinput_disabled.png"
+            background_disabled_normal: "data/img/textinput_disabled.png"
+            padding_y: [self.height / 3, 0]
+            size_hint: .3, .1
+            password:True
+            pos_hint: {"center_x": .58, "center_y": .53}
+        Label:
+            id: warning
+            text: "Username of password are incorrect, Please try again later"
+            opacity:0
+            color: 1,1,1,0.9
+            font_name: "data/font/CaviarDreams.ttf"
+            font_size: self.height / 5
+            size_hint: .1, .1
+            pos_hint: {"center_x": .51, "center_y": .400}
+
+        Button:
+            id: btn_login
+            text: "Login"
+            font_name: "data/font/LibelSuit.ttf"
+            font_size: self.height / 3
+            background_normal: "data/img/but_red_down.png"
+            background_down:  "data/img/but_red_down.png"
+            background_disabled_normal:  "data/img/but_red_down.png"
+            size_hint: .2, .08
+            pos_hint: {"center_x": .63, "center_y": .310}
+            on_release: root.Login()
+        Button:
+            id: btn_cancel
+            text: "Cancel"
+            font_name: "data/font/LibelSuit.ttf"
+            font_size: self.height / 3
+            background_normal: "data/img/but_red_down.png"
+            background_down:  "data/img/but_red_down.png"
+            background_disabled_normal:  "data/img/but_red_down.png"
+            size_hint: .2, .08
+            pos_hint: {"center_x": .40, "center_y": .310}
+            on_release: root.Back()
+        Label:
+            id:admin
+            text: "Administrator Login"
+            pos_hint:{"center_x":.525,"center_y":.435}
+            size_hint:.01,.01
+            font_name: "data/font/LibelSuit.ttf"
+        CheckBox:
+            id: CheckLogin
+            group:"check"
+            text: "Administrator Login"
+            size_hint: .03,.03
+            pos_hint:{"center_x":.44,"center_y":.435}
+            on_press: root.checkButton()
