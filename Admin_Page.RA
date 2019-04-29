@@ -1,7 +1,7 @@
-<Registeration>:
+#:import Factory kivy.factory.Factory
+<Admin_Page>:
     FloatLayout:
         id: layout_page
-
         canvas:
             Rectangle:
                 source: "data/img/Background-blur.png"
@@ -12,7 +12,6 @@
             id: layout_menubar
             size_hint_y: .075
             pos_hint: {"x": 0, "y": .925}
-
             canvas.before:
                 Color:
                     rgba: [0.0,0.0,0.0,0.76]
@@ -20,50 +19,9 @@
                     pos: root.center_x-260, root.center_y+175
                     size: 550,75
                     radius: 10,10,10,10
-
-        Label:
-            id: CourseRegistration
-            text: "Course Registration"
-            color: 1,1,1,0.9
-            multiline: False
-            opacity:0
-            font_name: "data/font/CaviarDreams.ttf"
-            font_size: self.height / 3
-            size_hint: .1, .1
-            pos_hint: {"center_x": .35, "center_y": .66}
-        Label:
-            id: StudentRegistration
-            text: "Student Registration"
-            color: 1,1,1,0.9
-            opacity:0
-            multiline: False
-            font_name: "data/font/CaviarDreams.ttf"
-            font_size: self.height / 3
-            size_hint: .1, .1
-            pos_hint: {"center_x": .35, "center_y": .530}
-
-        Label:
-            id: InstructorRegistration
-            text: "Instructor Registration"
-            opacity:0
-            color: 1,1,1,0.9
-            font_name: "data/font/CaviarDreams.ttf"
-            font_size: self.height / 5
-            size_hint: .1, .1
-            pos_hint: {"center_x": .51, "center_y": .400}
-        Label:
-            id: ClassroomRegistration
-            text: "Classroom Registration"
-            opacity:0
-            color: 1,1,1,0.9
-            font_name: "data/font/CaviarDreams.ttf"
-            font_size: self.height / 5
-            size_hint: .1, .1
-            pos_hint: {"center_x": .51, "center_y": .400}
-
         Button:
             id: Cl_btn
-            text: "Manage Classroom"
+            text: "Manage Courses"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 3
             background_normal: "data/img/but_red_down.png"
@@ -71,7 +29,6 @@
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
             pos_hint: {"center_x": .745, "center_y": .855}
-            on_release: root.Cl_Reg()
         Button:
             id: St_btn
             text: "Manage Students"
@@ -82,7 +39,6 @@
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
             pos_hint: {"center_x": .295, "center_y": .855}
-            on_release: root.St_Reg()
         Button:
             id: Ins_btn
             text: "Manage Instructor"
@@ -93,5 +49,3 @@
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
             pos_hint: {"center_x": .52, "center_y": .855}
-            on_release: root.In_Reg()
-
