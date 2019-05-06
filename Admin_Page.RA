@@ -4,48 +4,77 @@
         id: layout_page
         canvas:
             Rectangle:
-                source: "data/img/Background-blur.png"
+                source: "data/img/trianglify3.png"
                 size: self.size
                 pos: self.pos
         FloatLayout:
             id: layout_menubar
             canvas.before:
                 Color:
-                    rgba: [0.0,0.0,0.0,0.76]
+                    rgba: [0.0,0.0,0.0,0.25]
                 RoundedRectangle:
-                    pos: root.center_x-260, root.center_y+175
-                    size: 550,75
+                    pos: root.center_x-400, root.center_y - 300
+                    size: 250,600
                     radius: 10,10,10,10
+        Label:
+            text:'Instructor:'
+            color: 1,1,1,1
+            font_name: 'data/font/CaviarDreams.ttf'
+            font_size: self.height / 3
+            size_hint: .1, .1
+            pos_hint: {"center_x": .15, "center_y": .925}
+        Label:
+            id: ins_name
+            text:'Instructor:'
+            color: 1,1,1,1
+            font_name: 'data/font/CaviarDreams.ttf'
+            font_size: self.height / 2
+            size_hint: .1, .1
+            pos_hint: {"center_x": .15, "center_y": .875}
+
         Button:
             id: Cl_btn
             text: "Instructor profile"
             font_name: "data/font/LibelSuit.ttf"
-            font_size: self.height / 3
+            font_size: 20
+            btn_id:3
             background_normal: "data/img/but_red_down.png"
             background_down:  "data/img/but_red_down.png"
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
-            pos_hint: {"center_x": .745, "center_y": .855}
+            pos_hint: {"center_x": .150, "center_y": .40}
             on_release:root.profile()
         Button:
             id: St_btn
-            text: "add Student"
+            text: "Manage Students"
             font_name: "data/font/LibelSuit.ttf"
-            font_size: self.height / 3
+            font_size: 20
+            btn_id: 1
             background_normal: "data/img/but_red_down.png"
             background_down:  "data/img/but_red_down.png"
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
-            pos_hint: {"center_x": .295, "center_y": .855}
-            #on_release:root.del_st()
+            pos_hint: {"center_x": .150, "center_y": .700}
         Button:
-            id: Ins_btn
-            text: "delete Student"
+            id: Co_btn
+            text: "Manage Courses"
             font_name: "data/font/LibelSuit.ttf"
-            font_size: self.height / 3
+            font_size: 20
+            btn_id: 2
             background_normal: "data/img/but_red_down.png"
             background_down:  "data/img/but_red_down.png"
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
-            pos_hint: {"center_x": .52, "center_y": .855}
-            on_release:root.del_students()
+            pos_hint: {"center_x": .150, "center_y": .500}
+        Button:
+            id: exit
+            text: "Exit"
+            font_name: "data/font/LibelSuit.ttf"
+            font_size: 20
+            btn_id : 0
+            background_normal: "data/img/but_red_down.png"
+            background_down:  "data/img/but_red_down.png"
+            background_disabled_normal:  "data/img/but_red_down.png"
+            size_hint: .18, .08
+            pos_hint: {"center_x": .150, "center_y": .10}
+            on_press: root.Exit()
