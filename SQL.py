@@ -54,15 +54,19 @@ def coursesWIns():
 """register a new student with courses or without"""
 def register_student_w_courses(st_name,st_surname,dept,st_bank_card,st_id,email,courses=[]): # add a new student to some courses
     try:
-        c.execute("""insert into student values ("{name}","{surname}","{dep}",{card_id},{id},'{email}')""".format(name = st_name,surname = st_surname,dep = dept,
+
+
+        c.execute("""insert into student values ("{name}","{surname}","{dep}",'{card_id}',{id},'{email}')""".format(name = st_name,surname = st_surname,dep = dept,
                                                                                                       card_id = st_bank_card,id = st_id,email = email))
         query = """insert into takes values ({id},'{course_code}')"""
-        database.commit()
         for course in courses:
             c.execute(query.format(id=st_id, course_code=course))
-            database.commit()
+
+        database.commit()
+        return 1
     except Exception as E:
-        return "User Already exists"
+        return 0
+
 
 
 """Register already existed student to some courses, Admin"""
@@ -160,13 +164,14 @@ def getInsWCourses():
     return data
 
 
-def reg_course(title,credits,code,ins=None):
-    query = """insert into course values ('{t}',{cr},'{Code}',{i_id})"""
-    if ins != None:
-        c.execute(query.format(t= title,cr = credits,Code = code,i_id = ins))
-    else:
-        c.execute(query.format(t= title,cr = credits,Code = code,i_id = "NULL"))
-    database.commit()
+def reg_course(title,credits,code,ins):
+    try:
+        query = """insert into course values ('{t}',{cr},'{Code}',{i_id})"""
+        c.execute(query.format(t= title,cr = credits,Code = code,i_id =ins))
+        database.commit()
+        return 1
+    except:
+        return 0
 
 
 def inscourses(id):
@@ -229,16 +234,17 @@ def updatepass(old,new,email):
 
 
 def add_students_w_courses(student_list,courses_list):
-    query ="""insert into student (id,name,surname,dept) values (%s,%s,%s,%s)"""
+    query ="""insert into student (id,name,surname,dept,email) values (%s,%s,%s,%s,%s)"""
     coursequery = """insert into takes values ({id},'{course_code}')"""
     for course in courses_list:
         for student in student_list:
             try:
                 c.executemany(query,[student])
-                c.execute(coursequery.format(id = student[0],course_code = course))
+                c.execute(coursequery.format(id=student[0], course_code=course))
                 database.commit()
-            except Exception as E:
-                continue
+            except :
+                c.execute(coursequery.format(id=student[0], course_code=course))
+                database.commit()
 
 def attendance_report(st_id,date):
     query = """select * from attendance where id={id} and Day(date) = {d} and Month(date) = {m}"""
@@ -277,29 +283,42 @@ def email_exist(email):
 
 def attendance(card_id):
     query = """select id from student where bank_card_id = '{i}'"""
+    now = datetime.datetime.now()
     c.execute(query.format(i=card_id))
     studentdata = c.fetchall()[0]
-    day = calendar.day_name[0]
-    coursesquery = """select * from schedule where course_code in (select course_code from takes where id = {id}) and day = '{d}' """
+    day = calendar.day_name[now.weekday()]
+    Hour = now.hour
+    coursesquery = """select * from schedule where course_code in (select course_code from takes where id = {id}) and day = '{d}' and hour(start_hour) <= {t} and hour(end_hour) > {t} """
     try:
-        c.execute(coursesquery.format(id=studentdata[0], d=day))
-        courses = c.fetchall()[0]
+        c.execute(coursesquery.format(id=studentdata[0], d=day,t = Hour))
+        courses = c.fetchall()
         time = datetime.datetime.now().time().strftime("%H:%M:%S")
-        attendancequery = """insert into attendance values ({id},'{code}','{d}','{h}')"""
-        c.execute(attendancequery.format(id = studentdata[0],code = courses[-1],d = datetime.datetime.now().date(),h =time))
-        database.commit()
-        return 1
+        check = """select id from attendance where course_code = '{c}' and date = '{d}' and hour(Hour) = '{h}'"""
+        c.execute(check.format(c = courses[0][-1],d = now.date(),h = now.hour))
+        checkedattendance = c.fetchall()
+        if len(checkedattendance) == 0:
+            attendancequery = """insert into attendance values ({id},'{code}','{d}','{h}')"""
+            c.execute(attendancequery.format(id = studentdata[0],code = courses[0][-1],d = datetime.datetime.now().date(),h =time))
+            database.commit()
+            print 'taken'
+            return 1
+        else:
+            print 'already'
+            return -1
     except Exception as e:
         return 0
 
 def studentlogin(id):
+
+
     query = """select * from student where id ={d}"""
-    c.execute(query.format(d = id))
-    data = c.fetchone()
-    if data == None:
+    try:
+        c.execute(query.format(d = int(id)))
+        data = c.fetchone()
         return data
-    else:
-        return data
+    except:
+        return None
+
 
 def ins_login(email,password):
     query = """select * from instructor where email = '{e}' and password = '{p}'"""
@@ -311,4 +330,76 @@ def ins_login(email,password):
         return data
 
 
+def student_info(st_id):
+    query = """select * from student where id = {d}"""
+    c.execute(query.format(d = st_id))
+    return c.fetchall()
 
+def ins_info(ins_email):
+    query = """select * from instructor where email = '{e}'"""
+    c.execute(query.format(e = ins_email))
+    return c.fetchall()
+
+
+def all_rooms():
+    query = """select * from classroom"""
+    c.execute(query)
+    return c.fetchall()
+
+
+def find_ins_id(email):
+    query = """select id from instructor where email = '{e}'"""
+    c.execute(query.format(e = email))
+    data = c.fetchall()
+    if len(data) == 0:
+        return None
+    else:
+        return data
+
+
+
+def course_schedule(start,end,day,classroom_id,course_code):
+
+    coursecheck = """select course_code from course where course_code = '{course_code}'"""
+    c.execute(coursecheck.format(course_code = course_code,id = classroom_id))
+    check = c.fetchall()
+    if len(check) != 0:
+        courses  = """select * from schedule where day = '{d}' and classroom_id = '{id}'"""
+        c.execute(courses.format(d = day,id = classroom_id))
+        data = c.fetchall()
+        try:
+            start_object = datetime.datetime.strptime(start, '%H:%M').time()
+            end_object =  datetime.datetime.strptime(end, '%H:%M').time()
+        except:
+            start_object = datetime.datetime.strptime(start+":00", '%H:%M').time()
+            end_object = datetime.datetime.strptime(end+":00", '%H:%M').time()
+        for sch in data:
+            sch_start = (datetime.datetime.min + sch[0]).time()
+            sch_end = (datetime.datetime.min + sch[1]).time()
+
+            if sch_start < start_object < sch_end or sch_start < end_object < sch_end:
+                return "overlap with " + sch[4] + " on " + sch[2]
+        try:
+            query = """insert into schedule values ( '{start}','{end}','{day}',{c_id},'{c_code}') """
+            c.execute(query.format(start = start, end = end,day = day.title(), c_id = classroom_id,c_code = course_code.upper()))
+            database.commit()
+            return "Saved"
+        except:
+            return "Course Code Duplicate"
+
+    else:
+        return "No Such Course"
+
+
+
+def find_class_id(number):
+    query = """select id from classroom  where room_number = {r} and building = '{d}'"""
+    c.execute(query.format(d = int(number[0]),r = int(number[1:])))
+    return c.fetchall()
+
+
+
+def get_ins_courses(ins_id):
+    query = """select * from course where i_id = {d} """
+    c.execute(query.format(d = int(ins_id)))
+    return c.fetchall()
