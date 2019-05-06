@@ -3,24 +3,28 @@
         id: layout_page
         canvas:
             Rectangle:
-                source: "data/img/Background-blur.png"
+                source: "data/img/trianglify.png"
                 size: self.size
                 pos: self.pos
+
+
+
         FloatLayout:
-            canvas:
+            canvas.before:
                 Color:
-                    rgba: [0.0,0.0,0.0,0.8]
-                RoundedRectangle:
-                    pos: self.center_x-265, self.center_y-225
-                    size: 550,440
-                    radius: 10,10,10,10
-                Color:
-                    rgba: [1,1,1,0.8]
+
+                    rgba: [0.0,0.0,0.0,0.3]
                 Line:
                     points:[135,375,685,375]
                     width: 1
                     dash_offset:4
-                    dash_length:6
+                    dash_length:5
+                RoundedRectangle:
+                    pos: self.center_x-265, self.center_y-225
+                    size: 550,440
+                    radius: 10,10,10,10
+
+
 
             Label:
                 id: txt_title
@@ -80,12 +84,14 @@
                 id: input_id
                 write_tab: False
                 multiline: False
+                text:'alicakmak@sehir.edu.tr'
                 font_name: "data/font/CaviarDreams_Bold.ttf"
                 font_size: self.height / 3
                 background_normal: "data/img/textinput.png"
                 background_active: "data/img/textinput_disabled.png"
                 background_disabled_normal: "data/img/textinput_disabled.png"
                 padding_y: [self.height / 3, 0]
+                padding_x:[10,10]
                 size_hint: .33, .1
                 pos_hint: {"center_x": .65, "center_y": .420}
             Label:
@@ -107,7 +113,9 @@
                 pos_hint: {"center_x": .40, "center_y": .370}
             TextInput:
                 id: input_pass
+                password:True
                 write_tab: False
+                text:'1234'
                 multiline: False
                 font_name: "data/font/CaviarDreams_Bold.ttf"
                 font_size: self.height / 3
@@ -147,7 +155,6 @@
             Label:
                 id: warning
                 text:"Wrong student id, Please try again."
-                #text: "Username of password are incorrect, Please try again later"
                 opacity:0
                 color: 1,1,1,0.9
                 font_name: "data/font/CaviarDreams.ttf"
