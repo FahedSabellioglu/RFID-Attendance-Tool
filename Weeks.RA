@@ -1,8 +1,8 @@
-<Months@GridLayout>:
-    cols:1
-	orientation: 'vertical'
-	size_hint: .1,1
-	pos_hint:{"center_x":.10,"center_y":.450}
+<Weeks@GridLayout>:
+    cols:14
+	orientation: 'horizontal'
+	size_hint: 1,1
+	pos_hint:{"center_x":.50,"center_y":.760}
 	AnchorLayout:
 	    anchor_x:"right"
         Button:
@@ -15,7 +15,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 	AnchorLayout:
@@ -30,7 +37,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            size: 80, 30
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 	AnchorLayout:
@@ -45,7 +59,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 	AnchorLayout:
@@ -60,7 +81,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            size: 80, 30
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
             on_press: root.parent.parent.callback(self)
             size_hint: None, None
 	AnchorLayout:
@@ -75,7 +103,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 	AnchorLayout:
@@ -90,7 +125,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 	AnchorLayout:
@@ -104,8 +146,15 @@
             background_down:  "data/img/widget_red_select.png"
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
             radius:[5,15,15,15]
-            size: 80, 25
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 	AnchorLayout:
@@ -120,7 +169,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 	AnchorLayout:
@@ -135,7 +191,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
     AnchorLayout:
@@ -149,8 +212,15 @@
             background_down:  "data/img/widget_red_select.png"
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
             radius:[5,15,15,15]
-            size: 80, 25
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
     AnchorLayout:
@@ -165,7 +235,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 
@@ -181,7 +258,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
     AnchorLayout:
@@ -196,7 +280,14 @@
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
             radius:[5,15,15,15]
-            size: 80, 25
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
     AnchorLayout:
@@ -210,8 +301,15 @@
             background_down:  "data/img/widget_red_select.png"
             background_disabled_normal:"data/img/widget_red_select.png"
             color:[0,0,0,1]
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: 90
+                    origin: self.center
+            canvas.after:
+                PopMatrix
             radius:[5,15,15,15]
-            size: 80, 25
+            size: 80, 30
             size_hint: None, None
             on_press: root.parent.parent.callback(self)
 
