@@ -24,7 +24,6 @@ from kivy.clock import Clock
 from Arduino import *
 from kivy.uix.image import Image
 import xlrd
-import numpy as np
 import datetime
 from calendar import c as CalendarObject
 
@@ -36,7 +35,7 @@ def add_2_pop(pop_name,widgets):
 
 def txt_input(hint,id,font_size,background_normal,background_active,size_hint_x,size_hint_y,pos_hint,multiline=False,readonly=False,focus=False,is_focusable = True):
     txt = TextInput(hint_text = hint, id = id, font_name = "data/font/CaviarDreams_Bold.ttf", font_size = font_size, background_normal = background_normal, background_active = background_active,
-                    size_hint_x = size_hint_x,size_hint_y = size_hint_y,pos_hint = pos_hint, multiline = multiline, readonly = readonly, focus = focus)
+                    size_hint_x = size_hint_x,size_hint_y = size_hint_y,pos_hint = pos_hint, multiline = multiline, readonly = readonly, focus = focus,write_tab = False)
     return txt
 def btn(text,font_size,background_normal,background_active,size_hint_x,size_hint_y,height,pos_hint,on_release):
     cr_btn = Button(text=text,font_name ="data/font/LibelSuit.ttf",font_size = font_size,background_normal = background_normal,
@@ -45,7 +44,7 @@ def btn(text,font_size,background_normal,background_active,size_hint_x,size_hint
 
     return cr_btn
 
-def AddStudent(self): #add student drop button
+def AddStudent(self):
     self.parent.parent.dismiss()
     popup_content = FloatLayout()
     def Add(dt):
@@ -58,18 +57,21 @@ def AddStudent(self): #add student drop button
         Courses = self.AllCourses.adapter.selection
 
         if not Name or not Surname or not ID or not Dept or not BankCardId or len(Courses) == 0 or not email:
-            print "Please Fill"
+            self.warn.text = 'Please Fill The Fields'
+            self.warn.opacity = 1
         else:
             info = [" ".join(course.text.split()[1:3]) for course in Courses]
-            register_student_w_courses(Name,Surname,Dept,BankCardId,ID,email,info)
-            print "adding"
-            """
-                Commands for adding a new student
-            """
+            value = register_student_w_courses(Name,Surname,Dept,BankCardId,ID,email,info)
+            self.warn.opacity = 0
             popup.dismiss()
     def Scan(dt):
-        id = Read()
-        self.BankCardID.text = id
+        try:
+            id = Read()
+            self.BankCardID.text = id
+            self.warn.opacity = 0
+        except:
+            self.warn.text = "No Scan"
+            self.warn.opacity = 1
 
     """
         SQL Commands to bring all courses, form a list of lists with course_code and name
@@ -120,6 +122,11 @@ def AddStudent(self): #add student drop button
                   size = (self.parent.parent.parent.width /1.2 , self.parent.parent.parent.height/1.2 ),
                   background_color=[0.0, 0.0, 0.0, 0.4], background="T.png")
 
+    self.warn = Label(font_name="data/font/LibelSuit.ttf", id='warn',
+                      text='',
+                      pos_hint={'center_x': .75, 'center_y': .4}, color=[0, 0, 0, 1], opacity=0)
+    popup_content.add_widget(self.warn)
+
 
     popup_content.add_widget(btn("Cancel",self.parent.parent.parent.height/40,"data/img/widget_red.png","data/img/widget_red_select.png",.45,
                                  .1,self.parent.parent.parent.height/25,{"center_x": .750, "y": 0},popup.dismiss))
@@ -129,18 +136,19 @@ def AddStudent(self): #add student drop button
                                  .45,.1,self.parent.parent.parent.height/25,{"center_x": .250, "y": 0},Add))
 
 
-    add_2_pop(popup_content,[self.Surname,self.StudentID,self.AllCourses,self.BankCardID,self.Name,self.Dept,self.email])
+
+    add_2_pop(popup_content,[self.StudentID,self.Name,self.Surname,self.Dept,self.email,self.BankCardID,self.AllCourses])
     popup.open()
 
 
 
-def on_delete(self): #delete student drop button
+def on_delete(self):
     self.condition1 = True
     self.condition2 = True
     def CourseSelection(self,dt):
         SelectedStudent = self.Students.adapter.selection
         SelectedCourse = self.AllCourses.adapter.selection
-        if len(SelectedStudent) == 0 and len(SelectedCourse)==0: # go back to the initial appearance
+        if len(SelectedStudent) == 0 and len(SelectedCourse)==0:
             self.condition1 = True
             CoursesTaken = dict([(c_info[2],c_info[0])for c_info in courses_taken()])
             students = [[student[4],student[0]+" "+student[1], student[2].upper()]for student in students_taking_courses()]
@@ -161,7 +169,7 @@ def on_delete(self): #delete student drop button
         SelectedStudent = self.Students.adapter.selection
         SelectedCourse = self.AllCourses.adapter.selection
 
-        if len(SelectedStudent) == 0 and len(SelectedCourse)==0: # go back to the initial appearance
+        if len(SelectedStudent) == 0 and len(SelectedCourse)==0:
             self.condition2 = True
             CoursesTaken = dict([(c_info[2],c_info[0])for c_info in courses_taken()])
             students = [[student[4],student[0]+" "+student[1], student[2].upper()]for student in students_taking_courses()]
@@ -170,7 +178,7 @@ def on_delete(self): #delete student drop button
             self.AllCourses.populate()
             self.Students.populate()
 
-        elif len(SelectedStudent) >= 1 and len(SelectedCourse) >= 0 and self.condition1: # more than one student is chosen, then show all courses and here we will delete both students from the common course
+        elif len(SelectedStudent) >= 1 and len(SelectedCourse) >= 0 and self.condition1:
             self.condition2 = False
             pattern = re.compile("\s\d{7,9}\s")
             chosen_students = [int(re.findall(pattern,id.text)[0]) for id in SelectedStudent]
@@ -181,38 +189,39 @@ def on_delete(self): #delete student drop button
         SelectedStudent = self.Students.adapter.selection
         SelectedCourse = self.AllCourses.adapter.selection
 
-        if len(SelectedStudent) == 0 and len(SelectedCourse) == 0: # did not chose any
-             print "Chose a student first"
+        if len(SelectedStudent) == 0 and len(SelectedCourse) == 0: 
+            self.warn.text =  "Chose a student first"
+            self.warn.opacity = 1
 
-        elif len(SelectedCourse) != 0 and len(SelectedStudent) == 0: #one or multiple courses are chosen without chosing a student, then all the students from those courses will be deleted
+        elif len(SelectedCourse) != 0 and len(SelectedStudent) == 0:
             CourseCode = [" ".join(selected.text.split()[1:3]) for selected in SelectedCourse]
-            print CourseCode
             delete_allstudent_course(CourseCode)
-            print "delete all students from the chosen course"
 
-        elif len(SelectedStudent) != 0 and len(SelectedCourse) == 0: # delete the students selected from all their courses
+            self.popup.dismiss()
+            on_delete(self)
+        elif len(SelectedStudent) != 0 and len(SelectedCourse) == 0:
             pattern = re.compile("\s\d{7,9}\s")
             chosen_students = [int(re.findall(pattern, id.text)[0]) for id in SelectedStudent]
             delete_student_allcourses(chosen_students)
+            self.warn.opacity = 0
             """
                 delete the student from all courses
             """
-            print "delete the student from all courses"
+            self.popup.dismiss()
+            on_delete(self)
         elif len(SelectedStudent) != 0 and len(SelectedCourse) != 0:
             idpatterns = re.compile("\s\d{7,9}\s")
             chosen_students = [int(re.findall(idpatterns, id.text)[0]) for id in SelectedStudent]
             coursepattern = re.compile('[A-Z]{0,5}\s\d{0,3}\s')
             Codes = [re.findall(coursepattern, r.text)[0].strip() for r in SelectedCourse]
-            print "in"
-            print Codes,chosen_students
             delete_student_course(chosen_students,Codes)
+            self.warn.opacity = 0
 
             """
                 delete the chosen students from the chosen courses
             """
-            print "delete the chosen students from the chosen courses"
-        self.popup.dismiss()
-        on_delete(self)
+            self.popup.dismiss()
+            on_delete(self)
     Data = [[student[4],student[0]+' '+student[1],student[2]]for student in students_taking_courses()]
 
 
@@ -239,6 +248,10 @@ def on_delete(self): #delete student drop button
     popup_content.add_widget(Label(text="Courses", pos_hint={'center_x': .75, 'center_y': .95}, color=[0, 0, 0, 1]))
 
 
+    self.warn = Label(text="warning",pos_hint = {'center_x':.50,'center_y':.20},color=[0,0,0,1],font_name = "data/font/CaviarDreams_Bold.ttf",opacity = 0)
+    popup_content.add_widget(self.warn)
+
+
     """
         SQL commands for getting all courses in the university, list of lists [[course_code, name]]
     """
@@ -248,7 +261,6 @@ def on_delete(self): #delete student drop button
     else:
         x = 0.4
         y = 0.705
-    print y
 
 
     self.AllCourses = ListView(size_hint=(.48, x),pos_hint={"center_x": .76, "center_y": y})
@@ -274,6 +286,13 @@ def on_delete(self): #delete student drop button
 
 
 def Importlist(self):
+
+    def selected(self):
+        try:
+            self.parent.parent.parent.parent.dismiss()
+        except:
+            pass
+
 
     def open_list(dt):
         out = FloatLayout(size_hint=(.4,.85),pos_hint = {'center_x':.55,'center_y':.2})
@@ -304,11 +323,12 @@ def Importlist(self):
                 courses = AllCourses.adapter.selection
                 Codes = [re.findall(pattern, r.text)[0].strip() for r in courses]
                 add_students_w_courses(data,Codes)
+                self.popup.dismiss()
         except:
             WarningLabel.opacity = 1
 
 
-    self.data_all_ids = dict([(c_info[2], c_info[0]) for c_info in courses_taken()])
+    self.data_all_ids = dict([(course[2], course[0]) for course in get_ins_courses(find_ins_id(Cache.get('instructor','email'))[0][0])])
 
     popup_content = FloatLayout()
     img = Image(source="data/img/excel_ico.png", size_hint_y=.18, pos_hint={'center_x': .05, 'center_y': .83},
@@ -323,19 +343,14 @@ def Importlist(self):
     self.popup = Popup(id="pop", title="Import List", font_name="data/font/CaviarDreams_Bold.ttf", title_size=23,
                        title_align="center", title_color=[0, 0, 0, 1],
                        content=popup_content, separator_color=[0, 0, 0, 0.1], size_hint=(None, None),
-                       size=(520, (float(self.parent.height) / .140) - 350)
+                       size=(520, (float(self.parent.height) / .140) - 660)
                        , background="T.png", pos_hint={"center_x": .5, "center_y": .50})
 
     """
         SQL commands for getting all courses in the university, list of lists [[course_code, name]]
     """
-    if len(self.data_all_ids) != 0:
-        x = float(len(self.data_all_ids.items())) * 16 / float(len(self.data_all_ids.items())) / 40
-        y = float(len(self.data_all_ids.items())) * 30 / float(len(self.data_all_ids.items())) / 40
-    else:
-        x = 0.4
-        y = 0.75
-    AllCourses = ListView(size_hint=(.48, 0.6), pos_hint={"center_x": .76, "center_y": y})
+
+    AllCourses = ListView(size_hint=(.53, 0.6), pos_hint={"center_x": .74, "center_y": 0.68})
 
     Courses_Convertor = lambda row_index, x: {"text": "ID: {id} - Name: {N} ".format(id=x[0], N=x[1]), "markup": True,
                                               "selected_color": (.50, .50, .40, 0.6),
@@ -352,10 +367,10 @@ def Importlist(self):
                                   { "center_x": .28, "center_y": .83},open_list))
 
     popup_content.add_widget(btn("Confirm",self.height/2.3,"data/img/widget_red.png","data/img/widget_red.png",.25,None,self.height/1.8,
-                                 {"center_x": .35, "center_y": .05 - (len(AllCourses.adapter.data) * self.height / 1.5) / 1000},
+                                 {"center_x": .35, "center_y": .05 - (len(AllCourses.adapter.data) * self.height / 2) / 1000},
                                  confirm))
     popup_content.add_widget(btn("Close",self.height/2.3,"data/img/widget_red.png","data/img/widget_red.png",.25,None,self.height/1.8,
-                                 {"center_x": .65, "center_y": .05 - (  len(AllCourses.adapter.data) * self.height / 1.5) / 1000},
+                                 {"center_x": .65, "center_y": .05 - (  len(AllCourses.adapter.data) * self.height / 2) / 1000},
                                  self.popup.dismiss))
     add_2_pop(popup_content,[AllCourses])
     self.popup.open()
@@ -420,24 +435,74 @@ def profile(self):
 
 
 
+def DropdownControl(self,dt):
 
+    data = self.children[0].children
+    counter = 0
+    for i in data:
+        try:
+            if i.btn_id == 1:
+                i.pos_hint = {"center_x": .150, "center_y": .700}
+            elif i.btn_id == 2:
+                i.pos_hint = {"center_x": .150, "center_y": .550}
+            elif i.btn_id == 3:
+                i.pos_hint = {"center_x": .150, "center_y": .400}
+            counter += 1
+        except:
+            continue
 
+def h(self,dt):
 
+    if dt.text == "Manage Students":
+        self.StudentDropDown.open(dt)
+    elif dt.text ==  "Manage Courses":
+        self.CoursesDropDown.open(dt)
+    widgets = self.children[0].children
+    for i in widgets:
+        try:
+            if dt.text == "Manage Students":
+                if i.btn_id == 1:
+                    i.pos_hint = {"center_x": .150, "center_y": .750}
+                elif i.btn_id == 2:
+                    i.pos_hint = {"center_x": .150, "center_y": .40}
+                elif i.btn_id == 3:
+                    i.pos_hint = {"center_x": .150, "center_y": .250}
+            elif dt.text == "Manage Courses":
+                if i.btn_id == 3:
+                    i.pos_hint = {"center_x": .150, "center_y": .270}
+
+        except:
+            continue
 
 
 
 
 def on_pre_enter(self):
-    self.StudentDropDown = DropDown(pos_hint = {"center_x":.295,"center_y":.715})
-    img = Image(source = "data/img/3592659-128.png",size_hint_y =  .13)
-    self.StudentDropDown.add_widget(img)
-    student_add = Button(text="add student",size_hint_y = None,height = 40,background_normal = "data/img/but_red_down.png",background_active ="data/img/but_red_down.png",on_release = AddStudent)
-    import_list = Button(text="import list",size_hint_y = None,height = 40,background_normal = "data/img/but_red_down.png",background_active ="data/img/but_red_down.png",on_release = Importlist)
-    self.StudentDropDown.pos_hint = {"center_x":.295,'center_y':.715}
+    self.StudentDropDown = DropDown(pos_hint = {"center_x":.165,"center_y":.59}, on_dismiss = Clock.schedule_once(partial(DropdownControl,self) ))
+    student_add = Button(text="add student",size_hint_y = None,height = 40,size_hint_x = None, width = 120,background_normal = "data/img/but_red_down.png",background_active ="data/img/but_red_down.png",on_release = AddStudent)
+    import_list = Button(text="import list",size_hint_y = None,height = 40,size_hint_x = None, width = 120,background_normal = "data/img/but_red_down.png",background_active ="data/img/but_red_down.png",on_release = Importlist)
+    student_delete = Button(text="delete student",size_hint_y = None,height = 40,size_hint_x = None, width = 120,background_normal = "data/img/but_red_down.png",background_active ="data/img/but_red_down.png",on_release = self.del_students)
+
+
+    self.CoursesDropDown = DropDown(pos_hint = {'center_x':.165,'center_y':.430},on_dismiss = Clock.schedule_once(partial(DropdownControl,self) ))
+    course_add = Button(text="add course",size_hint_y = None,height = 40,size_hint_x = None, width = 120,background_normal = "data/img/but_red_down.png",background_active ="data/img/but_red_down.png",on_release = add_course)
+    course_delete = Button(text="delete course",size_hint_y = None,height = 40,size_hint_x = None, width = 120,background_normal = "data/img/but_red_down.png",background_active ="data/img/but_red_down.png",on_release = delete_course)
+
+    self.CoursesDropDown.add_widget(course_add)
+    self.CoursesDropDown.add_widget(course_delete)
+    self.CoursesDropDown.container.spacing = 5
+
+
+
     self.StudentDropDown.container.spacing = 5
     self.StudentDropDown.add_widget(student_add)
     self.StudentDropDown.add_widget(import_list)
-    self.ids["St_btn"].bind(on_release = self.StudentDropDown.open)
+    self.StudentDropDown.add_widget(student_delete)
+
+
+
+    self.ids["Co_btn"].bind(on_release = partial(h,self))
+    self.ids["St_btn"].bind(on_release = partial(h,self))
 
 
 def load_string(File):
@@ -449,7 +514,8 @@ def load_string(File):
 def AttendanceLogin(self):
     if self.ids["CheckLogin"].active == False:
         id = self.ids['input_id'].text.strip()
-        user_id = studentlogin(int(id))
+
+        user_id = studentlogin(id)
         if user_id == None :
             self.ids['warning'].text = "Wrong student id, Please try again."
             self.ids['warning'].pos_hint  = {"center_x": .62, "center_y": .280}
@@ -479,7 +545,7 @@ def Calendar(self,Value):
         weekdays = semester_weeks(month,Cache.get('counter','value'))
         Days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         for Day in Days:
-            layout.add_widget(Button(text=Day,color=[ 1,1,1,1],font_name= "data/font/CaviarDreams_Bold.ttf",background_color = [0.0,0.0,0.0,0.76],disabled=True))
+            layout.add_widget(Button(text=Day,color=[ 1,1,1,1],font_name= "data/font/CaviarDreams_Bold.ttf",background_color = [0.0,0.0,0.0,0.70],disabled=True))
 
         if Cache.get("days", 'numbers') == None:
             Cache.append("days", 'numbers', weekdays)
@@ -490,14 +556,14 @@ def Calendar(self,Value):
         for day in weekdays:
             if day[1] in [5,6]:
                 layout.add_widget(
-                            Button(text='{j}'.format(j=day[0]), background_color=[0.0, 0.0, 0.0, 0.76],disabled=True))
+                            Button(text='{j}'.format(j=day[0]), background_color=[0.0, 0.0, 0.0, 0.70],disabled=True))
             else:
                 layout.add_widget(Button(on_press=self.on_release, text='{j}'.format(j=day[0]), color=[1, 1, 1, 1],
-                                                 font_name="data/font/CaviarDreams_Bold.ttf",background_color = [0.0,0.0,0.0,0.76],id = '{j}'.format(j=day[0])))
+                                                 font_name="data/font/CaviarDreams_Bold.ttf",background_color = [0.0,0.0,0.0,0.70],id = '{j}'.format(j=day[0])))
 
 
 def semester_weeks(Value,w_n):
-    if Value in list(range(2,6,1)) :
+    if Value in list(range(2,6,1)):
         Months = list(range(2,6,1))
     else:
         Months = [9,10,11,12,1]
@@ -529,19 +595,21 @@ def NotePopUp(self,Day):
 
 
     data = attendance_report(Cache.get('user', 'login'), find(Cache.get('days', 'numbers'), Day))
+
+
     if not data:
         data = []
 
-    self.popup = Popup(title="Report",font_name = "data/font/CaviarDreams_Bold.ttf",title_size = 15,title_align = "center",
+    self.popup = Popup(title="Attendance Report",font_name = "data/font/CaviarDreams_Bold.ttf",title_size = 15,title_align = "center",
                     content=popup_content,separator_color=[0,0,0, 0.1], size_hint=(None, None),
-                    size=(self.width / .113, self.height / .35), background="data/img/BACK.png",)
+                    size=(self.width / .12, self.height / .20), background="data/img/BACK.png",)
 
     self.list_quests = ListView(size_hint=(1, .9), pos_hint={"center_x": .5, "center_y": .53})
 
-    args_converter = lambda row_index, x: {"text": "ID: {id} - Course: {C} - Title: {T} - Time: {t}".format(id=x[0],C=x[1],T = getcourseinfo(x[1]),t = x[-1].strftime("%H:%M")),
+    args_converter = lambda row_index, x: {"text": "ID: {id} - Course: {C} - Title: {T} - Time: {t}".format(id=x[0],C=x[1],T = getcourseinfo(x[1]),t = x[-1]),
                                            "markup": True,"selected_color": (.0, .2, .2, 0.3),"deselected_color": (.0, .2, .2, 0.3),
-                                           "font_name": "data/font/CaviarDreams_Bold.ttf", "font_size": self.height / 15,
-                                           "size_hint_y": None, "size_hint_x":1, "height": self.height / 5, }
+                                           "font_name": "data/font/CaviarDreams_Bold.ttf", "font_size": self.height / 7,
+                                           "size_hint_y": None, "size_hint_x":1, "height": self.height / 2, }
 
 
     self.list_quests.adapter = ListAdapter(data=data,
@@ -550,9 +618,9 @@ def NotePopUp(self,Day):
     popup_content.add_widget(self.list_quests)
 
     popup_content.add_widget(Button(text="Close", font_name="data/font/LibelSuit.ttf",
-                                    font_size=self.height / 10,background_normal="data/img/but_red_down.png",
+                                    font_size=self.height / 5,background_normal="data/img/but_red_down.png",
                                     background_down="data/img/but_red_down.png",size_hint_x=.15,
-                                    size_hint_y=None,height=self.height / 5,pos_hint={"center_x": .5, "y": .0},
+                                    size_hint_y=None,height=self.height / 3,pos_hint={"center_x": .5, "y": .0},
                                     on_release=self.popup.dismiss))
 
 
@@ -581,7 +649,7 @@ def new_card_pop(self):
         popup.dismiss()
         Cache.remove('id', 'user')
 
-    self.Name = txt_input("Name", 'user_name',  self.parent.parent.parent.height / 25, "data/img/widget_gray_75.png",
+    self.Name = txt_input("Email", 'user_name',  self.parent.parent.parent.height / 25, "data/img/widget_gray_75.png",
                           "data/img/widget_red_select.png", 1, .2,
                           {"center_x": .5, "center_y": .855})
 
@@ -604,6 +672,259 @@ def new_card_pop(self):
 
 
     popup.open()
+
+
+
+def existbutton(self):
+
+    self.add_widget(Button(text="Exit",size_hint = (.15,.09),pos_hint = {'center_x':.75,'center_y':.150},background_normal="data/img/but_red_down.png",background_active="data/img/but_red_down.png",
+                           on_press = self.Exit,background_down="data/img/but_red_down.png"))
+
+def add_course(self):
+    self.parent.parent.dismiss()
+    popup_content = FloatLayout()
+
+    def Add(dt):
+        Code = self.CourseCode.text.strip()
+        Title = self.CourseTitle.text.strip()
+        Credits = self.Credits.text.strip()
+        classroom = self.All_Ins.adapter.selection
+        days = self.days.text.strip()
+        start = self.start.text.strip()
+        end = self.end.text.strip()
+
+        if not Code or not Title or not Credits or not classroom or not start or not end:
+            self.warn.text = "Please Fill"
+            self.warn.opacity = 1
+
+        elif re.match("\w+\s\d+", Code) == None:
+            self.warn.text = "Please Follow the convention in Course Codes 'Letters Numbers'"
+            self.warn.opacity = 1
+
+        else:
+            reply = ""
+            ins_id = find_ins_id(Cache.get('instructor','email'))[0][0]
+            class_id = find_class_id(classroom[0].text.split()[-1])[0][0]
+            course_reg = reg_course(Title,Credits,Code,ins_id)
+            if course_reg:
+                start_time = start.split(',')
+                end_time = end.split(",")
+                if len(days.split(',')) != 1:
+                    index = 0
+                    for day in days.split(','):
+                        try:
+                            if len(start_time) == 2 and len(end_time) == 1:
+                                reply = course_schedule(start_time[index],end_time[0],day,int(class_id),Code)
+                                index += 1
+                            elif len(end_time) == 2 and len(start_time) == 1:
+                                reply =course_schedule(start_time[0], end_time[index], day, int(class_id), Code)
+                                index += 1
+                            elif len(end_time) == 2 and len(start_time) == 2:
+                                reply = course_schedule(start_time[index], end_time[index], day, int(class_id), Code)
+                                index += 1
+                        except:
+                            self.warn.text = reply
+                            self.warn.opacity = 1
+
+                    self.warn.opacity = 0
+                    popup.dismiss()
+
+                elif len(days.split(",")) == 1:
+                    try:
+                        if len(start_time) == 2 and len(end_time) == 2:
+                            reply =course_schedule(start_time[0],end_time[0],days,int(class_id),Code)
+                            reply =course_schedule(start_time[1], end_time[1], days, int(class_id), Code)
+                        elif len(start_time) == 1 and len(end_time) == 2:
+                            reply =course_schedule(start_time[0], end_time[0], days, int(class_id), Code)
+                            reply =course_schedule(start_time[0], end_time[1], days, int(class_id), Code)
+                        elif len(end_time) == 1 and len(start_time) == 2:
+                            reply =course_schedule(start_time[0], end_time[0], days, int(class_id), Code)
+                            reply =course_schedule(start_time[1], end_time[0], days, int(class_id), Code)
+                        else:
+                            reply =course_schedule(start_time[0], end_time[0], days, int(class_id), Code)
+
+                        self.warn.opacity = 0
+                        popup.dismiss()
+                    except:
+                        self.warn.text = reply
+                        self.warn.opacity = 1
+
+            else:
+                self.warn.text = "Duplicate Course code"
+                self.warn.opacity = 1
+    """
+        SQL Commands to bring all courses, form a list of lists with course_code and name
+    """
+    Data = [[str(ins[2]) + str(ins[1])] for ins in all_rooms()]
+
+    self.CourseCode = TextInput(hint_text="Course Code", id="CourseCode", multiline=False,
+                               font_name="data/font/CaviarDreams_Bold.ttf", font_size=self.parent.parent.parent.height / 25,
+                               background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_red_select.png",
+                                padding_y=[self.parent.parent.parent.height / 150, 0],
+                               size_hint_x=.40, size_hint_y=.1,pos_hint={"center_x": .20, "center_y": .900}, write_tab=False)
+
+    self.Credits = TextInput(hint_text="Credits", id="CourseCredits", write_tab=False, multiline=False,
+                          font_name="data/font/CaviarDreams_Bold.ttf", font_size=self.parent.parent.parent.height / 25,
+                          background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_red_select.png",
+                          padding_y=[self.height / 100, 0],
+                          size_hint_x=.40, size_hint_y=.1, pos_hint={"center_x": .20, "center_y": .600})
+
+    self.days = TextInput(hint_text="Days", id="course_days", write_tab=False, multiline=False,
+                          font_name="data/font/CaviarDreams_Bold.ttf", font_size=self.parent.parent.parent.height / 25,
+                          background_normal="data/img/widget_gray_75.png", background_active="data/img/widget_red_select.png",
+                          padding_y=[self.height / 100, 0],
+                          size_hint_x=.40, size_hint_y=.1, pos_hint={"center_x": .20, "center_y": .450})
+
+
+
+
+
+    self.CourseTitle = TextInput(hint_text="Course Title", id="user_password", multiline=False,
+                          font_name="data/font/CaviarDreams_Bold.ttf"
+                          , font_size=self.parent.parent.parent.height / 25,
+                          background_normal="data/img/widget_gray_75.png",
+                          background_active="data/img/widget_red_select.png",
+
+                          padding_y=[self.parent.parent.parent.height / 100, 0], size_hint_x=.40, size_hint_y=.1,
+                          pos_hint={"center_x": .20, "center_y": .750}, write_tab=False)
+
+    self.start = TextInput(hint_text="Start hour 12:00", id="user_password", multiline=False,
+                          font_name="data/font/CaviarDreams_Bold.ttf"
+                          , font_size=self.parent.parent.parent.height / 25,
+                          background_normal="data/img/widget_gray_75.png",
+                          background_active="data/img/widget_red_select.png",
+
+                          padding_y=[self.parent.parent.parent.height / 100, 0], size_hint_x=.40, size_hint_y=.1,
+                          pos_hint={"center_x": .20, "center_y": .300}, write_tab=False)
+
+    self.end = TextInput(hint_text="End hour 14:00", id="user_password", multiline=False,
+                          font_name="data/font/CaviarDreams_Bold.ttf"
+                          , font_size=self.parent.parent.parent.height / 25,
+                          background_normal="data/img/widget_gray_75.png",
+                          background_active="data/img/widget_red_select.png",
+
+                          padding_y=[self.parent.parent.parent.height / 100, 0], size_hint_x=.40, size_hint_y=.1,
+                          pos_hint={"center_x": .75, "center_y": .300}, write_tab=False)
+
+
+    popup_content.add_widget(self.start)
+    popup_content.add_widget(self.end)
+
+
+
+    """ All instructors in the uni"""
+    self.All_Ins = ListView(size_hint=(.45, .30), pos_hint={"center_x": .75, "center_y": .80})
+
+    Ins_Convertor = lambda row_index, x: {"text": "Room: {id}".format(id = x[0]), "markup": True,
+                                              "selected_color": (.50, .50, .40, 0.6),"deselected_color": (.0, .2, .2, 0.3),
+                                              "font_name": "data/font/CaviarDreams_Bold.ttf",  "font_size": self.height / 3.5, "size_hint_y": None,
+                                              "size_hint_x": 1, "height": self.height / 1.2}
+
+    """
+        SQL all instructors in the university, list of lists [[Name, dept]
+    """
+
+
+    self.All_Ins.adapter = ListAdapter(data=Data,
+                                          selection_limit=1,cls=ListItemButton, args_converter=Ins_Convertor,allow_empty_selection=True)
+
+
+    popup = Popup(title="Course Details", title_color=[0, 0, 0, 1], title_align="center",
+                  font_name="data/font/LibelSuit.ttf", title_size=19,
+                  content=popup_content, separator_color=[0.0, 0.0, 0.0, 0.4], size_hint=(None, None),
+                  size=(self.parent.parent.parent.width / 1.5, self.parent.parent.parent.height / 1.2),
+                  background_color=[0.0, 0.0, 0.0, 0.4], background="T.png")
+
+    popup_content.add_widget(
+        Button(text="Cancel", font_name="data/font/LibelSuit.ttf", font_size=self.parent.parent.parent.height / 40,
+               background_normal="data/img/widget_red.png", background_down="data/img/widget_red_select.png",
+               size_hint_x=.45, size_hint_y=.1, height=self.parent.parent.parent.height / 25
+               , pos_hint={"center_x": .750, "y": 0}, on_release=popup.dismiss))
+
+    popup_content.add_widget(
+        Button(text="Confirm", font_name="data/font/LibelSuit.ttf", font_size=self.parent.parent.parent.height / 40,
+               background_normal="data/img/widget_red.png", background_down="data/img/widget_red_select.png",
+               size_hint_x=.45, size_hint_y=.1, height=self.parent.parent.parent.height / 25,
+               pos_hint={"center_x": .250, "y": 0}, on_release=Add))
+
+
+    self.warn = Label(text="",pos_hint = {"center_x":.50,'center_y':.18},color = [0,0,0,1],opacity = 0)
+
+    popup_content.add_widget(self.warn)
+
+    popup_content.add_widget(self.CourseCode)
+    popup_content.add_widget(self.CourseTitle)
+    popup_content.add_widget(self.Credits)
+    popup_content.add_widget(self.days)
+    popup_content.add_widget(self.All_Ins)
+
+    popup.open()
+
+
+def delete_course(self):
+    self.parent.parent.dismiss()
+
+    def Delete(dt):
+        Courses = self.Courses.adapter.selection
+
+        if len(Courses) != 0:
+            pattern = re.compile('[a-zA-Z]{0,5}\s\d{0,3}\s')
+            Codes = [re.findall(pattern, r.text)[0].strip() for r in Courses]
+            del_coures(Codes)
+        else:
+            pass
+        self.popup.dismiss()
+        delete_course(self)
+
+
+
+    Data = [[course[2], course[0]] for course in get_ins_courses(find_ins_id(Cache.get('instructor','email'))[0][0])]
+
+    popup_content = FloatLayout()
+
+
+    self.popup = Popup(id="pop", title="Courses", font_name="data/font/CaviarDreams_Bold.ttf", title_size=23,
+                       title_align="center",
+                       content=popup_content, separator_color=[0, 0, 0, 0.1], size_hint=(None, None),
+                       size=(self.width / .200, (float(self.parent.height) / .140) - 90)
+                       , background="data/img/BACK.png", pos_hint={"center_x": .5, "center_y": .45})
+
+
+
+    self.Courses = ListView(size_hint=(.8, .3), pos_hint={"center_x": .5, "center_y": .75})
+
+    args_converter = lambda row_index, x: {"text": "Code: {id} - Name: {N} ".format(id=x[0], N=x[1]),
+                                            "markup": True, "selected_color": (.50, .50, .40, 0.6), "deselected_color": (.0, .2, .2, 0.3),
+                                            "font_name": "data/font/CaviarDreams_Bold.ttf", "font_size": self.height / 3.5,
+                                            "size_hint_y": None, "size_hint_x": 1, "height": self.height / 1.2}
+
+    """
+        SQL get all the courses, list of lists [[courseCode, name]]
+    """
+    self.Courses.adapter = ListAdapter(data=Data,  selection_mode = "multiple",
+                                        cls=ListItemButton,args_converter=args_converter, allow_empty_selection=True)
+
+
+    popup_content.add_widget(Button(text="Delete", font_name="data/font/LibelSuit.ttf", font_size=self.height / 2.3,
+                                    background_normal="data/img/widget_red.png",
+                                    background_down="data/img/widget_red.png",
+                                     size_hint_x=.25,
+                                    size_hint_y=None,
+                                    height=self.height / 1.8, pos_hint={"center_x": .35, "center_y": .47 - (
+                len(self.Courses.adapter.data) * self.height / 1.5) / 1000},
+                                    on_release=Delete))
+
+    popup_content.add_widget(
+        Button(text="Close", font_name="data/font/LibelSuit.ttf", id='CloseButton', font_size=self.height / 2.3,
+               background_normal="data/img/widget_red.png", background_down="data/img/widget_red.png",
+                size_hint_x=.25, size_hint_y=None,
+               height=self.height / 1.8, pos_hint={"center_x": .65, "center_y": .47 - (
+                        len(self.Courses.adapter.data) * self.height / 1.5) / 1000},
+               on_release=self.popup.dismiss))
+
+    popup_content.add_widget(self.Courses)
+    self.popup.open()
+
 
 
 def ChangePage(pages,screen):
