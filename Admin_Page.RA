@@ -7,11 +7,8 @@
                 source: "data/img/Background-blur.png"
                 size: self.size
                 pos: self.pos
-
         FloatLayout:
             id: layout_menubar
-            size_hint_y: .075
-            pos_hint: {"x": 0, "y": .925}
             canvas.before:
                 Color:
                     rgba: [0.0,0.0,0.0,0.76]
@@ -21,7 +18,7 @@
                     radius: 10,10,10,10
         Button:
             id: Cl_btn
-            text: "Manage Courses"
+            text: "Instructor profile"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 3
             background_normal: "data/img/but_red_down.png"
@@ -29,9 +26,10 @@
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
             pos_hint: {"center_x": .745, "center_y": .855}
+            on_release:root.profile()
         Button:
             id: St_btn
-            text: "Manage Students"
+            text: "add Student"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 3
             background_normal: "data/img/but_red_down.png"
@@ -39,9 +37,10 @@
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
             pos_hint: {"center_x": .295, "center_y": .855}
+            #on_release:root.del_st()
         Button:
             id: Ins_btn
-            text: "Manage Instructor"
+            text: "delete Student"
             font_name: "data/font/LibelSuit.ttf"
             font_size: self.height / 3
             background_normal: "data/img/but_red_down.png"
@@ -49,3 +48,4 @@
             background_disabled_normal:  "data/img/but_red_down.png"
             size_hint: .18, .08
             pos_hint: {"center_x": .52, "center_y": .855}
+            on_release:root.del_students()
