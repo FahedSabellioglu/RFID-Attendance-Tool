@@ -7,23 +7,75 @@
                 size: self.size
                 pos: self.pos
         FloatLayout:
-            canvas.before:
+            canvas:
                 Color:
-                    rgba: [0.0,0.0,0.0,0.4]
+                    rgba: [0.0,0.0,0.0,0.8]
                 RoundedRectangle:
-                    pos: root.center_x-350, root.center_y-200
-                    size: 450,300
-                    #size: .35,1
+                    pos: self.center_x-265, self.center_y-225
+                    size: 550,440
                     radius: 10,10,10,10
+                Color:
+                    rgba: [1,1,1,0.8]
+                Line:
+                    points:[135,375,685,375]
+                    width: 1
+                    dash_offset:4
+                    dash_length:6
+
             Label:
-                id: txt_id
-                text: "Student ID"
+                id: txt_title
+                text: "Attendance Report"
                 color: 1,1,1,1
-                multiline: False
                 font_name: "data/font/CaviarDreams.ttf"
                 font_size: self.height / 3
                 size_hint: .1, .1
-                pos_hint: {"center_x": .15, "center_y": .375}
+                pos_hint: {"center_x": .30, "center_y": .815}
+            Label:
+                id: txt_name
+                text:"Student name:"
+                color: 1,1,1,1
+                font_name: 'data/font/CaviarDreams.ttf'
+                font_size: self.height / 3
+                size_hint: .1, .1
+                pos_hint: {"center_x": .30, "center_y": .750}
+
+            Label:
+                id:st_name
+                txt_id:'name'
+                text:''
+                color: 1,1,1,1
+                font_name: 'data/font/CaviarDreams.ttf'
+                font_size: self.height / 3
+                size_hint: .1, .1
+                pos_hint: {"center_x": .55, "center_y": .750}
+            Label:
+                id: txt_id
+                text:'Student ID:'
+                color: 1,1,1,1
+                font_name: 'data/font/CaviarDreams.ttf'
+                font_size: self.height / 3
+                size_hint: .1, .1
+                pos_hint: {"center_x": .28, "center_y": .680}
+            Label:
+                id:st_id
+                txt_id:'id'
+                text:''
+                color: 1,1,1,1
+                font_name: 'data/font/CaviarDreams.ttf'
+                font_size: self.height / 3
+                size_hint: .1, .1
+                pos_hint: {"center_x": .55, "center_y": .680}
+            Label:
+                id:st_warn
+                txt_id:'warn'
+                text:'No courses at this Time'
+                color: 1,1,1,1
+                font_name: 'data/font/CaviarDreams.ttf'
+                font_size: self.height / 3
+                size_hint: .1, .1
+                pos_hint: {"center_x": .55, "center_y": .700}
+                opacity:0
+
             TextInput:
                 id: input_id
                 write_tab: False
@@ -35,19 +87,26 @@
                 background_disabled_normal: "data/img/textinput_disabled.png"
                 padding_y: [self.height / 3, 0]
                 size_hint: .33, .1
-                disabled:True
-                pos_hint: {"center_x": .43, "center_y": .38}
+                pos_hint: {"center_x": .65, "center_y": .420}
             Label:
-                id: txt_namesurname
-                text: "Name Surname"
+                id: login_id
+                text: "Student ID"
                 color: 1,1,1,1
-                multiline: False
                 font_name: "data/font/CaviarDreams.ttf"
                 font_size: self.height / 3
                 size_hint: .1, .1
-                pos_hint: {"center_x": .175, "center_y": .250}
+                pos_hint: {"center_x": .40, "center_y": .420}
+            Label:
+                id: login_passw
+                text:'Password'
+                color:1,1,1,1
+                font_name: "data/font/CaviarDreams.ttf"
+                font_size: self.height / 3
+                size_hint: .1, .1
+                opacity:0
+                pos_hint: {"center_x": .40, "center_y": .370}
             TextInput:
-                id: input_namesurname
+                id: input_pass
                 write_tab: False
                 multiline: False
                 font_name: "data/font/CaviarDreams_Bold.ttf"
@@ -58,8 +117,8 @@
                 padding_y: [self.height / 3, 0]
                 size_hint: .33, .1
                 disabled:True
-                pos_hint: {"center_x": .43, "center_y": .25}
-
+                opacity:0
+                pos_hint: {"center_x": .65, "center_y": .370}
             Button:
                 id: btn_login
                 text: "LOGIN"
@@ -68,13 +127,38 @@
                 background_normal: "data/img/but_red_down.png"
                 background_down: "data/img/but_red_down.png"
                 background_disabled_normal: "data/img/but_red_down.png"
-                size_hint: .2, .1
-                pos_hint: {"center_x": .525, "center_y": .10}
-                on_release:root.OnLogin()
+                size_hint: .15, .090
+                pos_hint: {"center_x": .725, "center_y": .20}
+                on_release:root.LoginCre()
+            Label:
+                id:admin
+                text: "Instructor Login"
+                pos_hint:{"center_x":.5,"center_y":.20}
+                size_hint:.01,.01
+                font_name: "data/font/LibelSuit.ttf"
+
+            CheckBox:
+                id: CheckLogin
+                group:"check"
+                text: "Administrator Login"
+                size_hint: .03,.03
+                pos_hint:{"center_x":.43,"center_y":.20}
+                on_press: root.CheckButtonControl()
+            Label:
+                id: warning
+                text:"Wrong student id, Please try again."
+                #text: "Username of password are incorrect, Please try again later"
+                opacity:0
+                color: 1,1,1,0.9
+                font_name: "data/font/CaviarDreams.ttf"
+                font_size: self.height / 5
+                size_hint: .1, .1
+                pos_hint: {"center_x": .62, "center_y": .280}
+
         Image:
             id: ico_login
-            source: "data/img/Login_Logo.png"
+            source: "data/img/3592659-128.png"
             allow_stretch: False
             keep_ratio:True
-            size_hint_y: .18
-            pos_hint: {"center_x": .17, "center_y": .550}
+            size_hint_y: .13
+            pos_hint: {"center_x": .25, "center_y": .540}
